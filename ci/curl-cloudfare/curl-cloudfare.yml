@@ -13,6 +13,5 @@ run:
   args:
   - -exc
   - |
-    whoiam 
     uname -a
     curl -vvv www.cloudfare.com --http2 
