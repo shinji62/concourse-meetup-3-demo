@@ -1,20 +1,20 @@
 ---
 jobs:
-# - name: create-docker-image
-#   serial: true
-#   public: true
-#   plan:
-#   - aggregate:
-#     - get: alpine-docker-image
-#       trigger: true
-#       params: {save: true}
-#     - get: alpine-docker-curl-http2
-#       trigger: true
-#   - put: alpine-curl-http2-image
-#     params:
-#       build: alpine-docker-curl-http2/
-#       tag_as_latest: true
-#       load_base: alpine-docker-image
+- name: create-docker-image
+  serial: true
+  public: true
+  plan:
+  - aggregate:
+    - get: alpine-docker-image
+      trigger: true
+      params: {save: true}
+    - get: alpine-docker-curl-http2
+      trigger: true
+  - put: alpine-curl-http2-image
+    params:
+      build: alpine-docker-curl-http2/
+      tag_as_latest: true
+      load_base: alpine-docker-image
       
 - name: run-curl
   serial: true
@@ -22,7 +22,12 @@ jobs:
   plan: 
   - get: alpine-docker-curl-http2
     trigger: true
+    passed: [create-docker-image]
+  - get: alpine-docker-curl-http2
+    trigger: true
+    passed: [create-docker-image]
   - task: run-curl
+    image: alpine-docker-curl-http2
     file: alpine-docker-curl-http2/ci/curl-cloudfare/curl-cloudfare.yml
 
 
