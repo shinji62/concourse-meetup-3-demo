@@ -1,0 +1,51 @@
+---
+jobs:
+- name: create-docker-image
+  serial: true
+  public: true
+  plan:
+  - aggregate:
+    - get: alpine-docker-image
+      trigger: true
+      params: {save: true}
+    - get: alpine-docker-curl-http2
+      trigger: true
+  - put: alpine-curl-http2-image
+    params:
+      build: alpine-docker-curl-http2/
+      tag_as_latest: true
+      load_base: alpine-docker-image
+
+      
+- name: run-curl
+  serial: true
+  public : true
+  - get: alpine-docker-curl-http2
+      trigger: true
+  plan:
+    - task: run-curl
+      file: alpine-docker-curl-http2/ci/curl-cloudfare/curl-cloudfare.yml
+
+
+resources:
+- name: alpine-docker-curl-http2
+  type: git
+  source:
+    uri: git@github.com:shinji62/concourse-meetup-3-demo.git
+    branch: master
+    private_key: {{private-key-github-concourse}}
+
+- name: alpine-curl-http2-image
+  type: docker-image
+  source:
+    repository: getourneau/alpine-curl-http2
+    email: {{email-docker-hub}}
+    username: {{username-docker-hub}}
+    password: {{password-docker-hub}}
+
+- name: alpine-docker-image
+  type: docker-image
+  source:
+    repository: alpine
+    tag: edge
+
