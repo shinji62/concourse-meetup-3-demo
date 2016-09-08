@@ -20,14 +20,14 @@ jobs:
   serial: true
   public: true
   plan: 
-  - get: alpine-docker-curl-http2
+  - get: alpine-curl-http2-image
     trigger: true
     passed: [create-docker-image]
   - get: alpine-docker-curl-http2
     trigger: true
     passed: [create-docker-image]
   - task: run-curl
-    image: alpine-docker-curl-http2
+    image: alpine-curl-http2-image
     file: alpine-docker-curl-http2/ci/curl-cloudfare/curl-cloudfare.yml
 
 

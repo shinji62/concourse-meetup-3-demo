@@ -1,0 +1,19 @@
+---
+jobs:
+- name: run-curl
+  serial: true
+  public: true
+  plan: 
+  - get: alpine-docker-curl-http2
+    trigger: true
+  - task: run-curl
+    file: alpine-docker-curl-http2/ci/curl-cloudfare/curl-cloudfare.yml
+
+
+resources:
+- name: alpine-docker-curl-http2
+  type: git
+  source:
+    uri: git@github.com:shinji62/concourse-meetup-3-demo.git
+    branch: master
+    private_key: {{private-key-github-concourse}}
