@@ -8,11 +8,11 @@ jobs:
     - get: alpine-docker-image
       trigger: true
       params: {save: true}
-    - get: alpine-docker-curl-http2
+    - get: concourse-meetup-#3-demo
       trigger: true
   - put: alpine-curl-http2-image
     params:
-      build: alpine-docker-curl-http2/
+      build: concourse-meetup-#3-demo/
       tag_as_latest: true
       load_base: alpine-docker-image
       
@@ -23,16 +23,16 @@ jobs:
   - get: alpine-curl-http2-image
     trigger: true
     passed: [create-docker-image]
-  - get: alpine-docker-curl-http2
+  - get: concourse-meetup-#3-demo
     trigger: true
     passed: [create-docker-image]
   - task: run-curl
     image: alpine-curl-http2-image
-    file: alpine-docker-curl-http2/ci/curl-cloudfare/curl-cloudfare.yml
+    file: concourse-meetup-#3-demo/ci/curl-cloudfare/curl-cloudfare.yml
 
 
 resources:
-- name: alpine-docker-curl-http2
+- name: concourse-meetup-#3-demo
   type: git
   source:
     uri: git@github.com:shinji62/concourse-meetup-3-demo.git
